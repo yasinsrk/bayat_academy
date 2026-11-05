@@ -55,6 +55,12 @@ services:
         REACT_APP_API_URL: /api
     container_name: bayat_frontend
     restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -q --spider http://127.0.0.1/ || exit 1" ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
     networks:
       - bayat_net
 
