@@ -1,0 +1,17 @@
+[Unit]
+Description=Bayat Academy Monitoring Agent
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/bayat_academy/monitoring
+ExecStart=/usr/bin/python3 /opt/bayat_academy/monitoring/main.py
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
