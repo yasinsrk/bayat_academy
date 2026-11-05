@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>آکادمی بیات — از صفر تا صد با ما</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/estedad-font@v4.0.0/dist/font-face.css" rel="stylesheet" type="text/css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<style>
+:root{
+  --bg:#050608;
+  --accent:#1A7FFF;
+  --text:#F5F8FF;
+  --muted:#8A93A6;
+  --line:rgba(245,248,255,0.10);
+  --font-en-display:'Bebas Neue', sans-serif;
+  --font-en-body:'Outfit', sans-serif;
+  --font-fa:'Estedad', sans-serif;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth; scroll-padding-top:env(safe-area-inset-top,0px);}
+html,body{background:var(--bg); color:var(--text); overflow-x:hidden;}
+body{font-family:var(--font-en-body); font-weight:300; line-height:1.5; -webkit-font-smoothing:antialiased;}
+html[dir="rtl"] body, html[dir="rtl"] input, html[dir="rtl"] textarea, html[dir="rtl"] button{font-family:var(--font-fa);}
+img{max-width:100%; display:block;}
+a{color:inherit; text-decoration:none;}
+button{font-family:inherit; cursor:pointer;}
+::selection{background:var(--accent); color:#fff;}
+
+/* hide native video controls */
+video::-webkit-media-controls{display:none !important;}
+video{pointer-events:none;}
+
+/* ---------- utility ---------- */
+.container{width:100%; max-width:1320px; margin:0 auto; padding:0 6vw;}
+[data-en],[data-fa]{transition:opacity .25s ease;}
+
+/* ---------- noise overlay ---------- */
+.noise{
+  position:fixed; inset:0; z-index:9990; pointer-events:none;
+  opacity:.035; mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* ---------- progress bar ---------- */
+.scroll-progress{position:fixed; top:0; left:0; height:2px; width:0%; background:var(--accent); z-index:9999; box-shadow:0 0 12px var(--accent);}
+
+/* ---------- custom cursor ---------- */
+.cursor-dot,.cursor-ring{position:fixed; top:0; left:0; border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%);}
+.cursor-dot{width:6px; height:6px; background:var(--accent);}
+.cursor-ring{width:34px; height:34px; border:1px solid rgba(245,248,255,.35); transition:width .2s,height .2s,border-color .2s,background .2s;}
+.cursor-ring.hover{width:56px; height:56px; border-color:var(--accent); background:rgba(26,127,255,.08);}
+@media (pointer:coarse){ .cursor-dot,.cursor-ring{display:none;} }
+
+/* ---------- loading screen ---------- */
+#loader{position:fixed; inset:0; z-index:99999; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:28px; transition:opacity .8s ease, visibility .8s ease;}
+#loader .load-logo{font-family:var(--font-en-display); letter-spacing:.12em; font-size:clamp(28px,4vw,44px); opacity:0; text-transform:uppercase;}
+html[dir="rtl"] #loader .load-logo{font-family:var(--font-fa); font-weight:700; letter-spacing:0;}
+#loader .bar-track{width:220px; height:1px; background:var(--line); position:relative; overflow:hidden;}
+#loader .bar-fill{position:absolute; inset:0; width:0%; background:var(--accent);}
+#loader.done{opacity:0; visibility:hidden;}
+
+/* ---------- nav ---------- */
+header.nav{position:fixed; top:0; left:0; right:0; z-index:500; display:flex; align-items:center; justify-content:space-between; padding:22px 6vw; transition:background .4s ease, backdrop-filter .4s ease, padding .4s ease; }
+header.nav.scrolled{background:rgba(5,6,8,.72); backdrop-filter:blur(14px); padding:14px 6vw; border-bottom:1px solid var(--line);}
+.nav-logo{font-family:var(--font-en-display); font-size:22px; letter-spacing:.08em; mix-blend-mode:screen;}
+html[dir="rtl"] .nav-logo{font-family:var(--font-fa); font-weight:700; letter-spacing:0;}
+.nav-logo img{height:26px; mix-blend-mode:screen;}
+.nav-links{display:flex; gap:34px; list-style:none;}
+.nav-links a{font-size:14px; letter-spacing:.02em; color:var(--muted); position:relative; padding:4px 0;}
+.nav-links a::after{content:''; position:absolute; bottom:0; left:0; width:0; height:1px; background:var(--accent); transition:width .3s ease;}
+.nav-links a:hover{color:var(--text);}
+.nav-links a:hover::after{width:100%;}
+.nav-right{display:flex; align-items:center; gap:18px;}
+.lang-switch{display:flex; gap:0; border:1px solid var(--line); border-radius:20px; overflow:hidden; font-size:12px;}
+.lang-switch button{padding:6px 14px; background:none; border:none; color:var(--muted);}
+.lang-switch button.active{background:var(--accent); color:#fff;}
+.admin-btn{font-size:12px; color:var(--muted); border:1px solid var(--line); padding:7px 16px; border-radius:20px;}
+.admin-btn:hover{border-color:var(--accent); color:var(--text);}
+.nav-toggle{display:none;}
+
+@media (max-width:860px){
+  .nav-links{display:none;}
+  .nav-toggle{display:block; font-size:22px;}
+}
+
+/* ---------- hero video ---------- */
+.hero-video-section{position:relative; height:100vh; overflow:hidden;}
+.hero-video-section video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+.hero-video-section .vid-overlay{position:absolute; inset:0; background:linear-gradient(180deg, rgba(5,6,8,.55) 0%, rgba(5,6,8,.25) 40%, rgba(5,6,8,.85) 100%);}
+.hero-video-content{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:14px; padding:0 20px;}
+.hero-video-content .brand{font-family:var(--font-en-display); font-size:clamp(48px,10vw,140px); letter-spacing:.03em; text-transform:uppercase; line-height:.95;}
+html[dir="rtl"] .hero-video-content .brand{font-family:var(--font-fa); font-weight:800; letter-spacing:0;}
+.hero-video-content .role{color:var(--muted); font-size:clamp(13px,1.6vw,17px); max-width:560px; letter-spacing:.02em;}
+.scroll-hint{position:absolute; bottom:36px; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:8px; color:var(--muted); font-size:11px; letter-spacing:.15em;}
+.scroll-hint .stick{width:1px; height:34px; background:var(--line); position:relative; overflow:hidden;}
+.scroll-hint .stick::after{content:''; position:absolute; top:-100%; left:0; width:100%; height:100%; background:var(--accent); animation:hint 1.8s infinite ease-in-out;}
+@keyframes hint{0%{top:-100%;} 60%{top:100%;} 100%{top:100%;}}
+
+/* ---------- hero glow ---------- */
+.hero-glow{position:absolute; width:520px; height:520px; border-radius:50%; pointer-events:none; background:radial-gradient(circle, rgba(26,127,255,.18) 0%, transparent 70%); transform:translate(-50%,-50%); z-index:2; transition:opacity .3s;}
+
+/* ---------- hero text section ---------- */
+.hero{min-height:92vh; display:flex; flex-direction:column; justify-content:center; padding-top:120px; padding-bottom:60px; position:relative;}
+.hero .display-name{font-family:var(--font-en-display); font-size:clamp(52px,9vw,128px); line-height:.92; text-transform:uppercase; letter-spacing:.01em;}
+html[dir="rtl"] .hero .display-name{font-family:var(--font-fa); font-weight:800; letter-spacing:0;}
+.hero .tagline{margin-top:22px; font-style:italic; font-size:clamp(16px,2vw,22px); color:var(--muted); font-weight:300; max-width:640px;}
+html[dir="rtl"] .hero .tagline{font-style:normal;}
+.cta-btn{margin-top:40px; display:inline-flex; align-items:center; gap:10px; border:1px solid var(--accent); color:var(--text); padding:15px 30px; border-radius:2px; font-size:14px; letter-spacing:.04em; width:fit-content; position:relative; overflow:hidden;}
+.cta-btn span.arrow{transition:transform .3s ease;}
+.cta-btn:hover span.arrow{transform:translateX(6px);}
+html[dir="rtl"] .cta-btn:hover span.arrow{transform:translateX(-6px) scaleX(-1);}
+html[dir="rtl"] .cta-btn span.arrow{display:inline-block; transform:scaleX(-1);}
+.cta-btn::before{content:''; position:absolute; inset:0; background:var(--accent); transform:scaleX(0); transform-origin:left; transition:transform .35s ease; z-index:-1;}
+.cta-btn:hover::before{transform:scaleX(1);}
+
+/* ---------- section heading ---------- */
+.sec-head{font-family:var(--font-en-display); font-size:clamp(30px,4vw,52px); text-transform:uppercase; letter-spacing:.02em; margin-bottom:14px;}
+html[dir="rtl"] .sec-head{font-family:var(--font-fa); font-weight:800; letter-spacing:0;}
+.sec-sub{color:var(--muted); font-size:14px; max-width:480px;}
+
+/* ---------- about ---------- */
+.about{padding:150px 0; position:relative;}
+.about .container{display:grid; grid-template-columns:0.85fr 1.15fr; gap:80px; align-items:center;}
+.about-portrait{position:relative;}
+.about-portrait .frame{position:relative; overflow:hidden; aspect-ratio:4/5;}
+.about-portrait img{width:100%; height:100%; object-fit:cover; filter:grayscale(15%);}
+.corner{position:absolute; width:46px; height:46px; pointer-events:none;}
+.corner.tl{top:-14px; left:-14px; border-top:1px solid var(--accent); border-left:1px solid var(--accent);}
+.corner.br{bottom:-14px; right:-14px; border-bottom:1px solid rgba(245,248,255,.25); border-right:1px solid rgba(245,248,255,.25);}
+html[dir="rtl"] .corner.tl{left:auto; right:-14px; border-left:none; border-right:1px solid var(--accent);}
+html[dir="rtl"] .corner.br{right:auto; left:-14px; border-right:none; border-left:1px solid rgba(245,248,255,.25);}
+.about-body p{color:var(--muted); font-size:16px; line-height:1.85; max-width:520px; margin-bottom:20px;}
+.about-stats{display:flex; gap:50px; margin-top:44px;}
+.stat b{display:block; font-family:var(--font-en-display); font-size:34px; color:var(--accent); letter-spacing:.02em;}
+html[dir="rtl"] .stat b{font-family:var(--font-fa); font-weight:800;}
+.stat span{font-size:12px; color:var(--muted); letter-spacing:.03em;}
+@media (max-width:900px){ .about .container{grid-template-columns:1fr; gap:50px;} }
+
+/* ---------- portfolio ---------- */
+.portfolio{padding:150px 0 90px;}
+.portfolio .container{margin-bottom:50px;}
+.pf-track-wrap{position:relative; padding:26px 0; cursor:grab;}
+.pf-track-wrap.dragging{cursor:grabbing;}
+.pf-track-wrap::before,.pf-track-wrap::after{content:''; position:absolute; left:0; right:0; height:26px; background:var(--bg); z-index:5;}
+.pf-track-wrap::before{top:0;}
+.pf-track-wrap::after{bottom:0;}
+.pf-track{display:flex; gap:26px; overflow-x:auto; scrollbar-width:none; padding:0 6vw; user-select:none;}
+.pf-track::-webkit-scrollbar{display:none;}
+.pf-card{flex:0 0 78vw; height:72vh; position:relative; overflow:hidden; background:#0b0d11;}
+.pf-card img{width:100%; height:100%; object-fit:cover; transition:transform .8s cubic-bezier(.22,.8,.3,1);}
+.pf-card:hover img{transform:scale(1.06);}
+.pf-card .letterbox{position:absolute; left:0; right:0; height:8%; background:#000; z-index:2;}
+.pf-card .letterbox.top{top:0;}
+.pf-card .letterbox.bottom{bottom:0;}
+.pf-card .pf-info{position:absolute; inset:8% 0; display:flex; flex-direction:column; justify-content:flex-end; padding:36px 44px; background:linear-gradient(0deg, rgba(0,0,0,.82) 0%, rgba(0,0,0,0) 55%); opacity:0; transition:opacity .45s ease; z-index:3;}
+.pf-card:hover .pf-info{opacity:1;}
+.pf-info .cat{font-size:12px; letter-spacing:.15em; color:var(--accent); margin-bottom:10px;}
+.pf-info h3{font-family:var(--font-en-display); font-size:clamp(24px,3vw,38px); text-transform:uppercase; margin-bottom:10px;}
+html[dir="rtl"] .pf-info h3{font-family:var(--font-fa); font-weight:800;}
+.pf-info p{color:var(--muted); font-size:14px; max-width:520px; margin-bottom:14px;}
+.pf-info .ig-link{font-size:13px; color:var(--text); border-bottom:1px solid var(--accent); width:fit-content;}
+.pf-dots{display:flex; justify-content:center; gap:10px; margin-top:34px;}
+.pf-dots button{width:7px; height:7px; border-radius:50%; border:none; background:var(--line);}
+.pf-dots button.active{background:var(--accent); width:22px; border-radius:4px; transition:width .3s ease;}
+@media (max-width:700px){ .pf-card{flex:0 0 88vw; height:58vh;} }
+
+/* ---------- clients ---------- */
+.clients{padding:120px 0; position:relative;}
+.clients-row{display:flex; gap:80px; overflow:hidden; position:relative; mask-image:linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); -webkit-mask-image:linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);}
+.clients-track{display:flex; gap:80px; white-space:nowrap; animation-timing-function:linear; animation-iteration-count:infinite;}
+.clients-track.left{animation-name:scrollLeft; animation-duration:55s;}
+.clients-track.right{animation-name:scrollRight; animation-duration:55s;}
+@keyframes scrollLeft{from{transform:translateX(0);} to{transform:translateX(-50%);}}
+@keyframes scrollRight{from{transform:translateX(-50%);} to{transform:translateX(0);}}
+.client-name{font-family:var(--font-en-display); font-size:30px; letter-spacing:.04em; color:var(--text); opacity:.2; transition:opacity .4s ease; text-transform:uppercase;}
+html[dir="rtl"] .client-name{font-family:var(--font-fa); font-weight:700; letter-spacing:0;}
+.client-name:hover{opacity:.9;}
+.clients-row{margin-bottom:34px;}
+
+/* ---------- contact ---------- */
+.contact{padding:150px 0;}
+.contact .container{display:grid; grid-template-columns:0.9fr 1.1fr; gap:90px;}
+.social-list{display:flex; flex-direction:column; margin-top:30px;}
+.social-item{position:relative; overflow:hidden; border-top:1px solid var(--line); padding:22px 0; display:flex; align-items:center; justify-content:space-between;}
+.social-item:last-child{border-bottom:1px solid var(--line);}
+.social-item span.label{font-size:20px; z-index:2; position:relative; transition:color .4s ease;}
+.social-item span.arrow-ico{z-index:2; position:relative; transition:transform .4s ease, color .4s ease;}
+.social-item::before{content:''; position:absolute; left:0; top:0; bottom:0; width:0; background:var(--accent); transition:width .4s cubic-bezier(.22,.8,.3,1); z-index:1;}
+html[dir="rtl"] .social-item::before{left:auto; right:0;}
+.social-item:hover::before{width:100%;}
+.social-item:hover span{color:#fff;}
+.social-item:hover span.arrow-ico{transform:translateX(6px);}
+html[dir="rtl"] .social-item:hover span.arrow-ico{transform:translateX(-6px);}
+
+.form-group{margin-bottom:26px;}
+.form-group label{display:block; font-size:12px; color:var(--muted); letter-spacing:.05em; margin-bottom:8px;}
+.form-group input, .form-group textarea{width:100%; background:transparent; border:none; border-bottom:1px solid var(--line); color:var(--text); font-size:16px; padding:10px 0; font-family:inherit; outline:none; transition:border-color .3s ease;}
+.form-group input:focus, .form-group textarea:focus{border-color:var(--accent);}
+.form-group textarea{resize:vertical; min-height:90px;}
+.submit-btn{margin-top:10px; background:var(--accent); color:#fff; border:none; padding:15px 32px; font-size:14px; letter-spacing:.04em;}
+.submit-btn:hover{filter:brightness(1.1);}
+.form-note{margin-top:14px; font-size:13px; color:var(--accent); opacity:0; transition:opacity .3s ease;}
+.form-note.show{opacity:1;}
+@media (max-width:900px){ .contact .container{grid-template-columns:1fr; gap:60px;} }
+
+/* ---------- footer ---------- */
+footer{padding:50px 6vw; display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--line); flex-wrap:wrap; gap:16px;}
+footer .f-logo{font-family:var(--font-en-display); font-size:18px; letter-spacing:.06em; mix-blend-mode:screen;}
+html[dir="rtl"] footer .f-logo{font-family:var(--font-fa); font-weight:700; letter-spacing:0;}
+footer .f-copy{font-size:12px; color:var(--muted);}
+footer .f-social{display:flex; gap:20px; font-size:12px; color:var(--muted);}
+footer .f-social a:hover{color:var(--accent);}
+
+/* ---------- reveal ---------- */
+.reveal{opacity:0; transform:translateY(40px);}
+
+/* ---------- admin ---------- */
+.admin-overlay{position:fixed; inset:0; background:rgba(5,6,8,.9); backdrop-filter:blur(10px); z-index:20000; display:none; align-items:center; justify-content:center; padding:20px;}
+.admin-overlay.open{display:flex;}
+.admin-box{background:#0b0d11; border:1px solid var(--line); width:100%; max-width:920px; max-height:88vh; overflow:hidden; display:flex; flex-direction:column;}
+.admin-head{display:flex; align-items:center; justify-content:space-between; padding:20px 26px; border-bottom:1px solid var(--line);}
+.admin-head h3{font-family:var(--font-en-display); letter-spacing:.05em; font-size:20px;}
+.admin-close{color:var(--muted); font-size:22px; line-height:1;}
+.admin-close:hover{color:var(--text);}
+.admin-login{padding:60px 40px; display:flex; flex-direction:column; gap:16px; align-items:center; text-align:center;}
+.admin-login input{width:260px; background:transparent; border:1px solid var(--line); color:var(--text); padding:12px 16px; font-size:14px;}
+.admin-login button{background:var(--accent); color:#fff; border:none; padding:12px 26px; font-size:13px;}
+.admin-error{color:#ff5c5c; font-size:12px; min-height:14px;}
+.admin-tabs{display:flex; gap:0; border-bottom:1px solid var(--line);}
+.admin-tabs button{flex:1; padding:14px; background:none; border:none; color:var(--muted); font-size:13px; border-bottom:2px solid transparent;}
+.admin-tabs button.active{color:var(--text); border-color:var(--accent);}
+.admin-body{padding:26px; overflow-y:auto;}
+.admin-form{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:30px; padding-bottom:26px; border-bottom:1px dashed var(--line);}
+.admin-form .full{grid-column:1/-1;}
+.admin-form label{font-size:11px; color:var(--muted); display:block; margin-bottom:6px;}
+.admin-form input, .admin-form textarea{width:100%; background:#050608; border:1px solid var(--line); color:var(--text); padding:9px 10px; font-size:13px;}
+.admin-save{grid-column:1/-1; background:var(--accent); color:#fff; border:none; padding:11px; font-size:13px; margin-top:6px;}
+.proj-row{display:flex; gap:14px; align-items:center; padding:12px 0; border-bottom:1px solid var(--line); cursor:grab;}
+.proj-row img{width:60px; height:44px; object-fit:cover; background:#111;}
+.proj-row .p-title{flex:1; font-size:13px;}
+.proj-row .p-title small{display:block; color:var(--muted); font-size:11px;}
+.proj-row button{font-size:11px; color:var(--muted); border:1px solid var(--line); padding:5px 10px; margin-left:6px;}
+.proj-row button:hover{color:var(--text); border-color:var(--accent);}
+.leads-table{width:100%; border-collapse:collapse; font-size:13px;}
+.leads-table th{text-align:left; color:var(--muted); font-weight:400; font-size:11px; padding:8px; border-bottom:1px solid var(--line);}
+.leads-table td{padding:8px; border-bottom:1px solid var(--line); vertical-align:top;}
+.clear-leads{margin-top:16px; font-size:12px; color:#ff5c5c; border:1px solid #ff5c5c44; padding:8px 16px;}
+
+@media (max-width:700px){
+  .admin-form{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div class="noise"></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="load-logo" data-en="ACADEMY BAYAT" data-fa="آکادمی بیات">ACADEMY BAYAT</div>
+  <div class="bar-track"><div class="bar-fill" id="barFill"></div></div>
+</div>
+
+<!-- NAV -->
+<header class="nav" id="mainNav">
+  <div class="nav-logo"><img src="../frontend/public/logo.png" alt="logo" onerror="this.style.display='none'"> </div>
+  <nav>
+    <ul class="nav-links">
+      <li><a href="#home" data-en="Home" data-fa="خانه">Home</a></li>
+      <li><a href="#about" data-en="About" data-fa="درباره">About</a></li>
+      <li><a href="#work" data-en="Work" data-fa="نمونه‌کارها">Work</a></li>
+      <li><a href="#clients" data-en="Clients" data-fa="مشتریان">Clients</a></li>
+      <li><a href="#contact" data-en="Contact" data-fa="تماس">Contact</a></li>
+    </ul>
+  </nav>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button id="btnEn" class="active">EN</button>
+      <button id="btnFa">FA</button>
+    </div>
+    <button class="admin-btn" id="openAdmin" data-en="Admin" data-fa="مدیریت">Admin</button>
+  </div>
+</header>
+
+<!-- HERO VIDEO -->
+<section class="hero-video-section" id="home">
+  <video autoplay muted loop playsinline webkit-playsinline poster="poster.jpg">
+    <source src="hero.mp4" type="video/mp4">
+  </video>
+  <div class="vid-overlay"></div>
+  <div class="hero-glow" id="heroGlow"></div>
+  <div class="hero-video-content">
+    <div class="brand" data-en="ACADEMY BAYAT" data-fa="آکادمی بیات">ACADEMY BAYAT</div>
+    <div class="role" data-en="Specialized training in AI, content production & online business" data-fa="آموزش تخصصی هوش مصنوعی، تولید محتوا و امور اینترنتی">Specialized training in AI, content production &amp; online business</div>
+  </div>
+  <div class="scroll-hint"><span data-en="SCROLL" data-fa="اسکرول">SCROLL</span><div class="stick"></div></div>
+</section>
+
+<!-- HERO TEXT -->
+<section class="hero">
+  <div class="container">
+    <h1 class="display-name reveal" data-en="ACADEMY BAYAT" data-fa="آکادمی بیات">ACADEMY BAYAT</h1>
+    <p class="tagline reveal" data-en="From zero to a hundred, together." data-fa="از صفر تا صد با ما">From zero to a hundred, together.</p>
+    <a href="#work" class="cta-btn reveal">
+      <span class="txt" data-en="View Work" data-fa="مشاهده نمونه‌کارها">View Work</span>
+      <span class="arrow">→</span>
+    </a>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="container">
+    <div class="about-portrait reveal">
+      <div class="frame" id="parallaxFrame">
+        <img src="portrait.jpg" alt="portrait">
+      </div>
+      <div class="corner tl"></div>
+      <div class="corner br"></div>
+    </div>
+    <div class="about-body reveal">
+      <div class="sec-head" data-en="About" data-fa="درباره ما">About</div>
+      <p data-en="Academy Bayat trains people in practical AI tools, professional content production, and building an online business from the ground up. Every course is built around real projects, not theory alone — so students walk away with things they actually shipped." data-fa="آکادمی بیات با تمرکز بر آموزش کاربردی هوش مصنوعی، تولید حرفه‌ای محتوا و راه‌اندازی کسب‌وکار اینترنتی از پایه فعالیت می‌کند. هر دوره حول پروژه‌های واقعی طراحی شده تا هنرجو با نمونه‌کار واقعی از دوره خارج شود.">Academy Bayat trains people in practical AI tools, professional content production, and building an online business from the ground up. Every course is built around real projects, not theory alone — so students walk away with things they actually shipped.</p>
+      <p data-en="We work closely with a small number of students and brands at a time, focused on depth over volume." data-fa="ما در هر بازه زمانی با تعداد محدودی هنرجو و برند همکاری می‌کنیم تا کیفیت آموزش فدای تعداد نشود.">We work closely with a small number of students and brands at a time, focused on depth over volume.</p>
+      <div class="about-stats">
+        <div class="stat"><b>50+</b><span data-en="Projects" data-fa="پروژه">Projects</span></div>
+        <div class="stat"><b>8+</b><span data-en="Years" data-fa="سال تجربه">Years</span></div>
+        <div class="stat"><b>20+</b><span data-en="Clients" data-fa="مشتری">Clients</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section class="portfolio" id="work">
+  <div class="container reveal">
+    <div class="sec-head" data-en="Selected Work" data-fa="نمونه‌کارها">Selected Work</div>
+    <p class="sec-sub" data-en="A look at recent projects, courses and productions." data-fa="نگاهی به پروژه‌ها، دوره‌ها و تولیدات اخیر.">A look at recent projects, courses and productions.</p>
+  </div>
+  <div class="pf-track-wrap" id="pfWrap">
+    <div class="pf-track" id="pfTrack"></div>
+  </div>
+  <div class="pf-dots" id="pfDots"></div>
+</section>
+
+<!-- CLIENTS -->
+<section class="clients" id="clients">
+  <div class="container reveal" style="margin-bottom:60px;">
+    <div class="sec-head" data-en="Clients" data-fa="مشتریان">Clients</div>
+  </div>
+  <div class="clients-row">
+    <div class="clients-track left" id="rowA"></div>
+  </div>
+  <div class="clients-row">
+    <div class="clients-track right" id="rowB"></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="reveal">
+      <div class="sec-head" data-en="Contact" data-fa="تماس با ما">Contact</div>
+      <p class="sec-sub" data-en="Reach out through any channel below." data-fa="از هر یک از راه‌های زیر می‌توانید در ارتباط باشید.">Reach out through any channel below.</p>
+      <div class="social-list">
+        <a class="social-item" href="mailto:info@academybayat.com"><span class="label" data-en="Email" data-fa="ایمیل">Email</span><span class="arrow-ico">↗</span></a>
+        <a class="social-item" href="tel:+989120000000"><span class="label" data-en="Phone" data-fa="تماس تلفنی">Phone</span><span class="arrow-ico">↗</span></a>
+        <a class="social-item" href="https://instagram.com/academybayat" target="_blank"><span class="label">Instagram</span><span class="arrow-ico">↗</span></a>
+        <a class="social-item" href="https://youtube.com/@academybayat" target="_blank"><span class="label">YouTube</span><span class="arrow-ico">↗</span></a>
+        <a class="social-item" href="https://t.me/academybayat" target="_blank"><span class="label">Telegram</span><span class="arrow-ico">↗</span></a>
+      </div>
+    </div>
+    <form class="reveal" id="contactForm">
+      <div class="form-group">
+        <label data-en="Name" data-fa="نام">Name</label>
+        <input type="text" id="fName" required>
+      </div>
+      <div class="form-group">
+        <label data-en="Email" data-fa="ایمیل">Email</label>
+        <input type="email" id="fEmail" required>
+      </div>
+      <div class="form-group">
+        <label data-en="Message" data-fa="پیام">Message</label>
+        <textarea id="fMessage" required></textarea>
+      </div>
+      <button type="submit" class="submit-btn" data-en="Send Message" data-fa="ارسال پیام">Send Message</button>
+      <div class="form-note" id="formNote" data-en="Message sent — thank you." data-fa="پیام شما ارسال شد — سپاسگزاریم.">Message sent — thank you.</div>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="f-logo" data-en="ACADEMY BAYAT" data-fa="آکادمی بیات">ACADEMY BAYAT</div>
+  <div class="f-copy" data-en="© 2026 Academy Bayat. All rights reserved." data-fa="© ۲۰۲۶ آکادمی بیات. تمامی حقوق محفوظ است.">© 2026 Academy Bayat. All rights reserved.</div>
+  <div class="f-social">
+    <a href="https://instagram.com/academybayat" target="_blank">Instagram</a>
+    <a href="https://t.me/academybayat" target="_blank">Telegram</a>
+    <a href="https://youtube.com/@academybayat" target="_blank">YouTube</a>
+  </div>
+</footer>
+
+<!-- ADMIN -->
+<div class="admin-overlay" id="adminOverlay">
+  <div class="admin-box">
+    <div class="admin-head">
+      <h3>Admin Panel</h3>
+      <button class="admin-close" id="adminClose">&times;</button>
+    </div>
+
+    <div id="loginView" class="admin-login">
+      <p style="color:var(--muted); font-size:13px;">Enter admin password</p>
+      <input type="password" id="adminPass" placeholder="Password">
+      <div class="admin-error" id="adminError"></div>
+      <button id="adminSubmit">Login</button>
+    </div>
+
+    <div id="panelView" style="display:none; flex:1; overflow:hidden; display:flex; flex-direction:column;">
+      <div class="admin-tabs">
+        <button class="active" data-tab="projects">Projects</button>
+        <button data-tab="leads">Leads</button>
+      </div>
+      <div class="admin-body" id="tabProjects">
+        <div class="admin-form" id="projectForm">
+          <input type="hidden" id="editId">
+          <div><label>Title (EN)</label><input id="pTitleEn"></div>
+          <div><label>Title (FA)</label><input id="pTitleFa"></div>
+          <div><label>Category (EN)</label><input id="pCatEn"></div>
+          <div><label>Category (FA)</label><input id="pCatFa"></div>
+          <div class="full"><label>Description (EN)</label><textarea id="pDescEn"></textarea></div>
+          <div class="full"><label>Description (FA)</label><textarea id="pDescFa"></textarea></div>
+          <div><label>Cover Image</label><input type="file" id="pCover" accept="image/*"></div>
+          <div><label>Instagram URL</label><input id="pIg" placeholder="https://instagram.com/..."></div>
+          <button type="button" class="admin-save" id="saveProject">Save Project</button>
+        </div>
+        <div id="projectList"></div>
+      </div>
+      <div class="admin-body" id="tabLeads" style="display:none;">
+        <table class="leads-table">
+          <thead><tr><th>Name</th><th>Email</th><th>Message</th><th>Date</th></tr></thead>
+          <tbody id="leadsBody"></tbody>
+        </table>
+        <button class="clear-leads" id="clearLeads">Clear All Leads</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ================= LANGUAGE ================= */
+const savedLang = localStorage.getItem('ab_lang') || 'en';
+function applyLang(lang){
+  document.documentElement.setAttribute('lang', lang);
+  document.documentElement.setAttribute('dir', lang === 'fa' ? 'rtl' : 'ltr');
+  document.documentElement.setAttribute('data-lang', lang);
+  document.querySelectorAll('[data-en]').forEach(el=>{
+    const val = lang === 'fa' ? el.getAttribute('data-fa') : el.getAttribute('data-en');
+    if(val !== null) el.textContent = val;
+  });
+  document.getElementById('btnEn').classList.toggle('active', lang==='en');
+  document.getElementById('btnFa').classList.toggle('active', lang==='fa');
+  localStorage.setItem('ab_lang', lang);
+  renderProjects(); renderClients();
+}
+document.getElementById('btnEn').addEventListener('click', ()=>applyLang('en'));
+document.getElementById('btnFa').addEventListener('click', ()=>applyLang('fa'));
+
+/* ================= LOADER ================= */
+window.addEventListener('load', ()=>{
+  const fill = document.getElementById('barFill');
+  const logo = document.querySelector('#loader .load-logo');
+  gsap.to(logo,{opacity:1, duration:.8});
+  let p = 0;
+  const iv = setInterval(()=>{
+    p += Math.random()*18;
+    if(p>=100){ p=100; clearInterval(iv);
+      fill.style.width = p+'%';
+      setTimeout(()=>{
+        document.getElementById('loader').classList.add('done');
+        runReveals();
+      }, 350);
+    } else {
+      fill.style.width = p+'%';
+    }
+  }, 180);
+});
+
+/* ================= NAV SCROLL STATE ================= */
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', ()=>{
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  document.getElementById('scrollProgress').style.width = (window.scrollY/h*100)+'%';
+});
+
+/* ================= CUSTOM CURSOR ================= */
+const dot = document.getElementById('cursorDot');
+const ring = document.getElementById('cursorRing');
+window.addEventListener('mousemove', e=>{
+  dot.style.left = e.clientX+'px'; dot.style.top = e.clientY+'px';
+  gsap.to(ring,{left:e.clientX, top:e.clientY, duration:.18});
+});
+document.querySelectorAll('a, button, .pf-card, input, textarea').forEach(el=>{
+  el.addEventListener('mouseenter', ()=>ring.classList.add('hover'));
+  el.addEventListener('mouseleave', ()=>ring.classList.remove('hover'));
+});
+
+/* ================= HERO GLOW ================= */
+const heroSection = document.querySelector('.hero-video-section');
+const glow = document.getElementById('heroGlow');
+heroSection.addEventListener('mousemove', e=>{
+  const r = heroSection.getBoundingClientRect();
+  glow.style.left = (e.clientX - r.left)+'px';
+  glow.style.top = (e.clientY - r.top)+'px';
+});
+
+/* ================= GSAP REVEALS ================= */
+function runReveals(){
+  gsap.registerPlugin(ScrollTrigger);
+  document.querySelectorAll('.reveal').forEach(el=>{
+    gsap.to(el, {
+      opacity:1, y:0, duration:1, ease:'power3.out',
+      scrollTrigger:{ trigger:el, start:'top 85%' }
+    });
+  });
+  gsap.to('#parallaxFrame img', {
+    yPercent: 12, ease:'none',
+    scrollTrigger:{ trigger:'.about', start:'top bottom', end:'bottom top', scrub:true }
+  });
+}
+
+/* ================= PROJECTS DATA ================= */
+const defaultProjects = [
+  {id:1, titleEn:"AI Content Mastery", titleFa:"تسلط بر تولید محتوا با هوش مصنوعی", catEn:"Course", catFa:"دوره آموزشی", descEn:"A complete course on producing content using modern AI tools, from idea to publish.", descFa:"دوره‌ای کامل برای تولید محتوا با ابزارهای هوش مصنوعی، از ایده تا انتشار.", cover:"", ig:"https://instagram.com/academybayat"},
+  {id:2, titleEn:"Online Business Launchpad", titleFa:"سکوی پرتاب کسب‌وکار اینترنتی", catEn:"Program", catFa:"برنامه آموزشی", descEn:"Step by step framework for launching an online business from zero.", descFa:"چارچوبی گام‌به‌گام برای راه‌اندازی کسب‌وکار اینترنتی از صفر.", cover:"", ig:"https://instagram.com/academybayat"},
+  {id:3, titleEn:"Automation with AI", titleFa:"اتوماسیون با هوش مصنوعی", catEn:"Workshop", catFa:"کارگاه", descEn:"Hands-on workshop building real automations with AI agents and tools.", descFa:"کارگاهی عملی برای ساخت اتوماسیون‌های واقعی با ابزارهای هوش مصنوعی.", cover:"", ig:"https://instagram.com/academybayat"}
+];
+function getProjects(){
+  let p = JSON.parse(localStorage.getItem('ab_projects') || 'null');
+  if(!p){ p = defaultProjects; localStorage.setItem('ab_projects', JSON.stringify(p)); }
+  return p;
+}
+function saveProjects(list){ localStorage.setItem('ab_projects', JSON.stringify(list)); }
+
+function renderProjects(){
+  const lang = document.documentElement.getAttribute('data-lang');
+  const list = getProjects();
+  const track = document.getElementById('pfTrack');
+  const dots = document.getElementById('pfDots');
+  track.innerHTML = ''; dots.innerHTML = '';
+  list.forEach((p,i)=>{
+    const card = document.createElement('div');
+    card.className = 'pf-card';
+    const img = p.cover || 'poster.jpg';
+    card.innerHTML = `
+      <img src="${img}" alt="" onerror="this.style.background='#0b0d11'">
+      <div class="letterbox top"></div><div class="letterbox bottom"></div>
+      <div class="pf-info">
+        <div class="cat">${lang==='fa'?p.catFa:p.catEn}</div>
+        <h3>${lang==='fa'?p.titleFa:p.titleEn}</h3>
+        <p>${lang==='fa'?p.descFa:p.descEn}</p>
+        ${p.ig ? `<a class="ig-link" href="${p.ig}" target="_blank">Instagram →</a>` : ''}
+      </div>`;
+    track.appendChild(card);
+    const dot = document.createElement('button');
+    if(i===0) dot.classList.add('active');
+    dot.addEventListener('click', ()=>{
+      track.scrollTo({left: card.offsetLeft - track.parentElement.offsetLeft, behavior:'smooth'});
+    });
+    dots.appendChild(dot);
+  });
+}
+renderProjects();
+
+/* portfolio drag-scroll */
+const pfWrap = document.getElementById('pfWrap');
+const pfTrack = document.getElementById('pfTrack');
+let isDown=false, startX, scrollLeft;
+pfWrap.addEventListener('mousedown', e=>{ isDown=true; pfWrap.classList.add('dragging'); startX=e.pageX; scrollLeft=pfTrack.scrollLeft; });
+window.addEventListener('mouseup', ()=>{ isDown=false; pfWrap.classList.remove('dragging'); });
+window.addEventListener('mousemove', e=>{
+  if(!isDown) return;
+  e.preventDefault();
+  const walk = (e.pageX - startX)*1.4;
+  pfTrack.scrollLeft = scrollLeft - walk;
+});
+pfTrack.addEventListener('scroll', ()=>{
+  const cards = pfTrack.querySelectorAll('.pf-card');
+  const dots = document.querySelectorAll('#pfDots button');
+  let closest = 0, min = Infinity;
+  cards.forEach((c,i)=>{
+    const diff = Math.abs(c.offsetLeft - pfTrack.scrollLeft - pfWrap.offsetLeft);
+    if(diff < min){ min = diff; closest = i; }
+  });
+  dots.forEach((d,i)=>d.classList.toggle('active', i===closest));
+});
+
+/* ================= CLIENTS ================= */
+const clientNames = ["Nova Digital","Bayat Media","PixelWorks","Arya Tech","Elite Studio","Vista Group","Karma Brands","Orbit Agency"];
+function renderClients(){
+  const rowA = document.getElementById('rowA');
+  const rowB = document.getElementById('rowB');
+  const list = [...clientNames, ...clientNames]; // duplicate for seamless loop
+  rowA.innerHTML = list.map(n=>`<span class="client-name">${n}</span>`).join('');
+  rowB.innerHTML = [...list].reverse().map(n=>`<span class="client-name">${n}</span>`).join('');
+}
+renderClients();
+
+/* ================= CONTACT FORM ================= */
+document.getElementById('contactForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const lead = {
+    name: document.getElementById('fName').value,
+    email: document.getElementById('fEmail').value,
+    message: document.getElementById('fMessage').value,
+    date: new Date().toISOString()
+  };
+  const leads = JSON.parse(localStorage.getItem('ab_leads') || '[]');
+  leads.unshift(lead);
+  localStorage.setItem('ab_leads', JSON.stringify(leads));
+  e.target.reset();
+  const note = document.getElementById('formNote');
+  note.classList.add('show');
+  setTimeout(()=>note.classList.remove('show'), 3500);
+});
+
+/* ================= ADMIN PANEL ================= */
+const ADMIN_PASS = 'mt2025';
+const overlay = document.getElementById('adminOverlay');
+document.getElementById('openAdmin').addEventListener('click', ()=>{
+  overlay.classList.add('open');
+});
+document.getElementById('adminClose').addEventListener('click', ()=>{
+  overlay.classList.remove('open');
+});
+document.getElementById('adminSubmit').addEventListener('click', tryLogin);
+document.getElementById('adminPass').addEventListener('keydown', e=>{ if(e.key==='Enter') tryLogin(); });
+function tryLogin(){
+  const val = document.getElementById('adminPass').value;
+  if(val === ADMIN_PASS){
+    document.getElementById('loginView').style.display='none';
+    document.getElementById('panelView').style.display='flex';
+    renderAdminProjects();
+    renderLeads();
+  } else {
+    document.getElementById('adminError').textContent = 'Incorrect password';
+  }
+}
+
+/* tabs */
+document.querySelectorAll('.admin-tabs button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.admin-tabs button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tabProjects').style.display = btn.dataset.tab==='projects' ? 'block':'none';
+    document.getElementById('tabLeads').style.display = btn.dataset.tab==='leads' ? 'block':'none';
+  });
+});
+
+/* project form handling */
+let coverBase64 = '';
+document.getElementById('pCover').addEventListener('change', e=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{ coverBase64 = reader.result; };
+  reader.readAsDataURL(file);
+});
+
+document.getElementById('saveProject').addEventListener('click', ()=>{
+  const list = getProjects();
+  const editId = document.getElementById('editId').value;
+  const data = {
+    id: editId ? parseInt(editId) : Date.now(),
+    titleEn: document.getElementById('pTitleEn').value,
+    titleFa: document.getElementById('pTitleFa').value,
+    catEn: document.getElementById('pCatEn').value,
+    catFa: document.getElementById('pCatFa').value,
+    descEn: document.getElementById('pDescEn').value,
+    descFa: document.getElementById('pDescFa').value,
+    ig: document.getElementById('pIg').value,
+    cover: coverBase64
+  };
+  if(editId){
+    const idx = list.findIndex(p=>p.id==editId);
+    if(idx>-1){ data.cover = coverBase64 || list[idx].cover; list[idx] = data; }
+  } else {
+    list.push(data);
+  }
+  saveProjects(list);
+  clearProjectForm();
+  renderAdminProjects();
+  renderProjects();
+});
+
+function clearProjectForm(){
+  document.getElementById('editId').value='';
+  ['pTitleEn','pTitleFa','pCatEn','pCatFa','pDescEn','pDescFa','pIg'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('pCover').value='';
+  coverBase64='';
+}
+
+function renderAdminProjects(){
+  const list = getProjects();
+  const wrap = document.getElementById('projectList');
+  wrap.innerHTML = '';
+  list.forEach((p,i)=>{
+    const row = document.createElement('div');
+    row.className='proj-row';
+    row.draggable = true;
+    row.dataset.index = i;
+    row.innerHTML = `
+      <img src="${p.cover || 'poster.jpg'}" onerror="this.style.background='#111'">
+      <div class="p-title">${p.titleEn}<small>${p.catEn}</small></div>
+      <button data-act="edit">Edit</button>
+      <button data-act="del">Delete</button>`;
+    row.querySelector('[data-act="edit"]').addEventListener('click', ()=>{
+      document.getElementById('editId').value = p.id;
+      document.getElementById('pTitleEn').value = p.titleEn;
+      document.getElementById('pTitleFa').value = p.titleFa;
+      document.getElementById('pCatEn').value = p.catEn;
+      document.getElementById('pCatFa').value = p.catFa;
+      document.getElementById('pDescEn').value = p.descEn;
+      document.getElementById('pDescFa').value = p.descFa;
+      document.getElementById('pIg').value = p.ig;
+      coverBase64 = p.cover;
+    });
+    row.querySelector('[data-act="del"]').addEventListener('click', ()=>{
+      const l = getProjects().filter(x=>x.id!==p.id);
+      saveProjects(l); renderAdminProjects(); renderProjects();
+    });
+    // drag reorder
+    row.addEventListener('dragstart', ()=>row.classList.add('dragging-row'));
+    row.addEventListener('dragend', ()=>row.classList.remove('dragging-row'));
+    row.addEventListener('dragover', e=>{
+      e.preventDefault();
+      const dragging = wrap.querySelector('.dragging-row');
+      if(dragging && dragging!==row){
+        const rows = [...wrap.children];
+        const from = rows.indexOf(dragging);
+        const to = rows.indexOf(row);
+        const l = getProjects();
+        const [moved] = l.splice(from,1);
+        l.splice(to,0,moved);
+        saveProjects(l);
+        renderAdminProjects();
+        renderProjects();
+      }
+    });
+    wrap.appendChild(row);
+  });
+}
+
+/* leads */
+function renderLeads(){
+  const leads = JSON.parse(localStorage.getItem('ab_leads') || '[]');
+  const body = document.getElementById('leadsBody');
+  body.innerHTML = leads.map(l=>`<tr><td>${l.name}</td><td>${l.email}</td><td>${l.message}</td><td>${new Date(l.date).toLocaleString()}</td></tr>`).join('') || '<tr><td colspan="4" style="color:var(--muted)">No leads yet.</td></tr>';
+}
+document.getElementById('clearLeads').addEventListener('click', ()=>{
+  localStorage.setItem('ab_leads','[]');
+  renderLeads();
+});
+
+/* ================= INIT ================= */
+applyLang(savedLang);
+
+})();
+</script>
+</body>
+</html>

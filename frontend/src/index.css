@@ -1,0 +1,242 @@
+@import '@fontsource/vazirmatn/200.css';
+@import '@fontsource/vazirmatn/300.css';
+@import '@fontsource/vazirmatn/400.css';
+@import '@fontsource/vazirmatn/500.css';
+@import '@fontsource/vazirmatn/600.css';
+@import '@fontsource/vazirmatn/700.css';
+@import '@fontsource/vazirmatn/800.css';
+@import '@fontsource/vazirmatn/900.css';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Vazirmatn', sans-serif;
+  background: #e8ecf1;
+  color: #1a1a2e;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  min-height: 100vh;
+  direction: rtl;
+}
+
+/* Premium Soft Background */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse at 15% 30%, rgba(108, 99, 255, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 70%, rgba(77, 150, 255, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(255, 217, 61, 0.02) 0%, transparent 50%);
+}
+
+/* ============================================
+   GLASSMORPHISM - iPhone Style
+   ============================================ */
+
+/* Navbar Glass - iPhone Style */
+.glass-navbar {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.04),
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.6);
+}
+
+.glass-navbar-scrolled {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(50px) saturate(200%);
+  -webkit-backdrop-filter: blur(50px) saturate(200%);
+  border: 0.5px solid rgba(255, 255, 255, 0.4);
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.06),
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Card Glass - iPhone Style */
+.glass-card-iphone {
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.03),
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 -1px 0 rgba(255, 255, 255, 0.3) inset;
+  border-radius: 20px;
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.glass-card-iphone:hover {
+  transform: translateY(-6px);
+  background: rgba(255, 255, 255, 0.45);
+  box-shadow:
+    0 12px 48px rgba(108, 99, 255, 0.06),
+    0 1px 0 rgba(255, 255, 255, 0.8) inset;
+  border-color: rgba(108, 99, 255, 0.08);
+}
+
+/* Hero Glass - iPhone Style */
+.glass-hero-iphone {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(50px) saturate(200%);
+  -webkit-backdrop-filter: blur(50px) saturate(200%);
+  border: 0.5px solid rgba(255, 255, 255, 0.4);
+  box-shadow:
+    0 8px 60px rgba(0, 0, 0, 0.02),
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.8);
+  border-radius: 32px;
+}
+
+/* Stat Box Glass - iPhone Style */
+.glass-stat-iphone {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.02),
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.6);
+  border-radius: 16px;
+}
+
+/* Button Glass - iPhone Style */
+.btn-glass-iphone {
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.4);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.02),
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.6);
+  border-radius: 14px;
+  padding: 12px 28px;
+  font-family: 'Vazirmatn', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  color: #1a1a2e;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.btn-glass-iphone:hover {
+  background: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 32px rgba(108, 99, 255, 0.06),
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.8);
+}
+
+.btn-glass-iphone-primary {
+  background: linear-gradient(135deg, #6C63FF, #4D96FF);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 24px rgba(108, 99, 255, 0.15);
+}
+
+.btn-glass-iphone-primary:hover {
+  box-shadow: 0 8px 40px rgba(108, 99, 255, 0.25);
+  color: white;
+}
+
+/* Gradient Text */
+.gradient-premium {
+  background: linear-gradient(135deg, #6C63FF 0%, #4D96FF 40%, #00D4FF 70%, #6C63FF 100%);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientFlow 5s ease-in-out infinite;
+}
+
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #6C63FF, #4D96FF);
+  border-radius: 10px;
+}
+
+/* Divider - iPhone Style */
+.divider-iphone {
+  width: 60px;
+  height: 2px;
+  margin: 0 auto;
+  background: linear-gradient(90deg, transparent, rgba(108, 99, 255, 0.3), transparent);
+  border-radius: 10px;
+  position: relative;
+}
+
+.divider-iphone::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background: #6C63FF;
+  border-radius: 50%;
+  filter: blur(3px);
+  opacity: 0.5;
+}
+
+/* Floating Orbs - Soft */
+.floating-orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: -1;
+  animation: orbFloat 15s ease-in-out infinite;
+}
+
+.floating-orb-1 {
+  width: 600px;
+  height: 600px;
+  background: rgba(108, 99, 255, 0.03);
+  top: -200px;
+  right: -150px;
+}
+
+.floating-orb-2 {
+  width: 500px;
+  height: 500px;
+  background: rgba(77, 150, 255, 0.02);
+  bottom: -150px;
+  left: -100px;
+  animation-delay: -5s;
+}
+
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(60px, -40px) scale(1.05); }
+  66% { transform: translate(-30px, 50px) scale(0.95); }
+}

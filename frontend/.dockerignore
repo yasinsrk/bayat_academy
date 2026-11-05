@@ -1,0 +1,30 @@
+# ─── Dependencies ───
+node_modules/
+
+# ─── Build output ───
+build/
+
+# ─── Env (secrets — do not bake into image) ───
+.env
+.env.*
+!.env.example
+
+# ─── Git ───
+.git/
+.gitignore
+
+# ─── Logs ───
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# ─── IDE / OS ───
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+
+# ─── Docs (not needed in image) ───
+README.md
